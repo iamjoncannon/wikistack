@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
 console.log(app)
-//const morgan = require('morgan')
 const main = require('./main.js')
 const { db, Page, User} = require('./models/index.js');
 
@@ -9,6 +8,7 @@ const { db, Page, User} = require('./models/index.js');
 //console.log(main())
 //app.use(morgan)
 //app.use(express.static('views'))
+
 app.use(express.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => {
