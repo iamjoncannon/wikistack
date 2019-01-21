@@ -17,19 +17,19 @@ const Page = db.define('page', {
       type: Sequelize.ENUM('open', 'closed'), allowNull: false
     }
   });
-  
-  const User = db.define('user', {
-    name: {
-      type: Sequelize.STRING, allowNull: false
-    },
-    email: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate: {
-        isEmail: true
-      }
+
+const User = db.define('user', {
+  name: {
+    type: Sequelize.STRING, allowNull: false
+  },
+  email: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      isEmail: true
     }
-  });
+  }
+});
 
 module.exports = { db, Page, User };
 

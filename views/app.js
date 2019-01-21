@@ -6,11 +6,9 @@ const express = require('express')
 const app = express()
 const main = require('./main.js')
 const { db, Page, User} = require('./models/index.js');
-
+const wikiPage = require('./wikiPage');
 const wikiRouter = require('./../routes/wiki');
-
 const userRouter = require('./../routes/user');
-
 
 //console.log(main())
 //app.use(morgan)
@@ -21,10 +19,21 @@ app.use('/wiki', wikiRouter)
 
 app.use('user', userRouter)
 
-app.get("/", (req, res) => {
-    // console.log(req.body)
-    // res.send(main());
-    res.redirect('/wiki')
+app.get("/", async (req, res, next) => {
+    
+    let pages = await Page.findAll();
+
+    pages = pages.map((x)=> x = x.dataValues)
+
+    console.log('pages: ', pages)
+
+    let output = ''
+
+    pages.forEach((x)=> output += wikiPage(x))
+
+    console.log(output)
+
+    res.send(main(output))
 })
 
 db.authenticate().
