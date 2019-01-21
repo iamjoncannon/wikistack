@@ -1,30 +1,31 @@
 'use strict'
 
+console.clear()
+
 const express = require('express')
 const app = express()
-//console.log(app)
-//const morgan = require('morgan')
 const main = require('./main.js')
 const { db, Page, User} = require('./models/index.js');
 
 const wikiRouter = require('./../routes/wiki');
 
-// console.log(wikiRouter)
-
-//const userRouter = require('./../routes/user');
+const userRouter = require('./../routes/user');
 
 
 //console.log(main())
 //app.use(morgan)
-//app.use(express.static('views'))
+app.use(express.static('views'))
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/wiki', wikiRouter)
 
+app.use('user', userRouter)
+
 app.get("/", (req, res) => {
     // console.log(req.body)
-    res.send(main());
-  })
+    // res.send(main());
+    res.redirect('/wiki')
+})
 
 db.authenticate().
   then(() => {
