@@ -10,8 +10,8 @@ module.exports = (pages) => layout(html`
   </form>
   <hr>
   <ul class="list-unstyled">
-    <ul>
-      <!-- PLACEHOLDER LIST OF PAGES -->
-    </ul>
+    <ul>` + 
+      pages.toString() + 
+    `</ul>
   </ul>`);
   

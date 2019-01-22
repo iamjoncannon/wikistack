@@ -1,20 +1,36 @@
+'use strict'
+
+console.clear()
+
 const express = require('express')
 const app = express()
-console.log(app)
 const main = require('./main.js')
 const { db, Page, User} = require('./models/index.js');
-
+const wikiPage = require('./wikiPage');
+const wikiRouter = require('./../routes/wiki');
+const userRouter = require('./../routes/user');
 
 //console.log(main())
 //app.use(morgan)
-//app.use(express.static('views'))
-
+app.use(express.static('views'))
 app.use(express.urlencoded({ extended: false }));
 
-app.get("/", (req, res) => {
-    console.log(req.body)
-    res.send(main());
-  })
+app.use('/wiki', wikiRouter)
+
+app.use('/users', userRouter)
+
+app.get("/", async (req, res, next) => {
+    
+    let pages = await Page.findAll();
+
+    pages = pages.map((x)=> x = x.dataValues)
+
+    let output = ''
+    console.log()
+    pages.forEach((x)=> output += wikiPage(x))
+
+    res.send(main(output))
+})
 
 db.authenticate().
   then(() => {
@@ -22,6 +38,7 @@ db.authenticate().
   })
 
 async function init (){
+  // db.sync( {force: true} )
   await User.sync()
   await Page.sync()
   app.listen(3000, () => {
@@ -29,6 +46,4 @@ async function init (){
   });
 }
 
-
-
-
+init()
