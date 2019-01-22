@@ -3,7 +3,7 @@
 const express = require('express')
 const wikiRouter = express.Router()
 
-const { Page } = require('./../views/models/index.js');
+const { Page, User } = require('./../views/models/index.js');
 
 let addPage = require('./../views/addPage.js');
 let wikiPage = require('./../views/wikipage.js')
@@ -15,6 +15,10 @@ wikiRouter.get('/', (req, res, next)=>{
     res.send('not yet')
 })
 
+wikiRouter.get('/add', (req, res, next)=>{
+    res.send(addPage())
+})
+
 wikiRouter.get('/:slug', async (req, res, next)=>{
 
 	try {
@@ -23,7 +27,7 @@ wikiRouter.get('/:slug', async (req, res, next)=>{
 				slug: req.params.slug
 			}
 		})
-		res.redirect(wikiPage(page));
+		res.send(wikiPage(page));
 	}
 	catch(error){
 		next(error)
@@ -31,8 +35,6 @@ wikiRouter.get('/:slug', async (req, res, next)=>{
 })
 
 wikiRouter.post('/', async (req, res, next)=>{
-
-	console.log(req.body)
 
 	let slug;
 
@@ -43,24 +45,33 @@ wikiRouter.post('/', async (req, res, next)=>{
 		slug = req.body.title.replace(/\s/g, '');
 	}
 
+	const [instance, wasCreated ] = await User.findOrCreate({
+		where: { name: req.body.authorName,
+				 email: req.body.AuthorEmail
+				}
+	})
+
 	const page = new Page({
 		title: req.body.title,
 		slug: slug,
 		content: req.body.pageContent,
-		status: 'open'
+		status: 'open',
 	})
+
 	try {
-		await page.save()
+		page.setAuthor(instance)
+
+		await page.save();
+
+		console.log(page)
+
+		res.redirect('/wiki/' + slug)
+
 	}
 	catch (error){
 		next(error)
 	}
 
-	res.redirect('/wiki/' + slug)
-})
-
-wikiRouter.get('/add', (req, res, next)=>{
-    res.send(addPage())
 })
 
 module.exports = wikiRouter;

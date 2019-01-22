@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/wiki', wikiRouter)
 
-app.use('user', userRouter)
+app.use('/users', userRouter)
 
 app.get("/", async (req, res, next) => {
     
@@ -25,13 +25,9 @@ app.get("/", async (req, res, next) => {
 
     pages = pages.map((x)=> x = x.dataValues)
 
-    console.log('pages: ', pages)
-
     let output = ''
 
     pages.forEach((x)=> output += wikiPage(x))
-
-    console.log(output)
 
     res.send(main(output))
 })
@@ -42,7 +38,7 @@ db.authenticate().
   })
 
 async function init (){
-//   db.sync({force: true})
+  // db.sync( {force: true} )
   await User.sync()
   await Page.sync()
   app.listen(3000, () => {
