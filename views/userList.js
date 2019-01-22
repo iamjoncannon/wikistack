@@ -1,8 +1,6 @@
 const html = require("html-template-tag");
 const layout = require("./layout");
 
-const { Page, User } = require('./models/index')
-
 module.exports = (users) => layout(html`
   <h3>Users</h3>
   <hr>

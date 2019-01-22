@@ -22,7 +22,6 @@ userRouter.get('/:id', async (req, res, next)=>{
 		}
 	})
 	
-	// console.log('heres the user \n\n\n\n', user, 'heres the page \n\n\n\n', pages);
 	try{
 		res.send(userPages(user, pages))
 	}
