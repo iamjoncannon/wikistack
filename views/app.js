@@ -26,7 +26,7 @@ app.get("/", async (req, res, next) => {
     pages = pages.map((x)=> x = x.dataValues)
 
     let output = ''
-
+    console.log()
     pages.forEach((x)=> output += wikiPage(x))
 
     res.send(main(output))

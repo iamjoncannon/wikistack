@@ -7,12 +7,13 @@ const { Page, User } = require('./../views/models/index.js');
 
 let addPage = require('./../views/addPage.js');
 let wikiPage = require('./../views/wikipage.js')
+const marked = require('marked');
 
 // /wiki/
 
 wikiRouter.get('/', (req, res, next)=>{
 
-    res.send('not yet')
+    res.redirect('/')
 })
 
 wikiRouter.get('/add', (req, res, next)=>{
@@ -22,14 +23,22 @@ wikiRouter.get('/add', (req, res, next)=>{
 wikiRouter.get('/:slug', async (req, res, next)=>{
 
 	try {
+
 		const page = await Page.findOne({
 			where: {
 				slug: req.params.slug
 			}
 		})
+
+		if(!page){
+			res.status(404)
+			res.send('not found bruh\n')
+		}
+		console.log(page)
 		res.send(wikiPage(page));
 	}
 	catch(error){
+		console.log(error)
 		next(error)
 	}
 })
@@ -63,14 +72,17 @@ wikiRouter.post('/', async (req, res, next)=>{
 
 		await page.save();
 
-		console.log(page)
-
 		res.redirect('/wiki/' + slug)
 
 	}
 	catch (error){
 		next(error)
 	}
+
+})
+
+wikiRouter.get('/:slug/edit', (req, res, next)=>{
+
 
 })
 
