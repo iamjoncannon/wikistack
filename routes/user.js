@@ -35,8 +35,6 @@ userRouter.get('/add', (req, res, next)=>{
     res.send(addPage())
 })
 
-
-
 userRouter.post('/', (req, res, next)=>{
     res.send()
 })
